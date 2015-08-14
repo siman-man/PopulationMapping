@@ -83,6 +83,18 @@ The method will return an int containing the population size within the region. 
 - 0 <= x1,x2 < W
 - 0 <= y1,y2 < H
 
+# スコアについて
+Your raw score for each test case will be the total land area you selected, multiplied by 0.996 for each query you issued. 
+あなたの素点は選択したエリアの数になります。 各クエリには0.996が掛けられていきます。
+
+In other words, your raw score will be:
+言いかえれば、あなたのスコアは下記の式から算出されます。
+
+Raw score = (Total land area selected) * (0.996 ^ (Number of queries))
+If the area selected contains a total population larger than the target percentage, your score for the test case will be 0. Any queries issued that go outside the bounds of the world, will return a value of -1, and result in failing the test case. Your overall score will use relative scoring, calculated as Sum(yours/best), where yours is your raw score and best is the highest raw score anyone achieved for that test case. The final score will be divided by the number of test cases, and scaled to 1,000,000.
+
+You can see your raw scores on each example test case by making an example submit. You can also see total scores of all competitors on provisional test set in the match standings. No other information about scores is available during the match.
+
 # テストケースの生成
 
 Please look at the visualizer source code for the exact details about test case generation. 
