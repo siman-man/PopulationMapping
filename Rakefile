@@ -49,7 +49,7 @@ end
 task :sample do
   system('rm result.txt')
   system("g++ -W -Wall -Wno-sign-compare -O2 -o #{@filename} #{@filename}.cpp")
-  1.upto(10) do |num|
+  0.upto(9) do |num|
     p num
     system("time java -jar ./#{@filename}Vis.jar -seed #{num} -novis -exec './#{@filename}' >> result.txt")
   end

@@ -34,6 +34,11 @@ enum CellType{
   CITY
 };
 
+enum MODE {
+  DIVIDED,
+  FINAL
+};
+
 typedef struct Coord {
   int y;
   int x;
@@ -58,12 +63,16 @@ double g_limitPopulation;
 int g_landCount = 0;
 // エリアID
 int g_areaId = 0;
+// モード
+int g_mode = DIVIDED;
 
 typedef struct Cell {
   int landType;
+  bool selected;
 
   Cell(int landType = OCEAN){
     this->landType = landType;
+    this->selected = false;
   }
 
   bool isLand(){
@@ -77,6 +86,7 @@ typedef struct Area {
   int x1;
   int y2;
   int x2;
+  int dividedCount;
   int landCount;
   int s;
   int population;
@@ -84,6 +94,7 @@ typedef struct Area {
   Area(int y1, int x1, int y2, int x2){
     this->id = g_areaId;
     this->y1 = y1;
+    this->dividedCount = 0;
     this->x1 = x1;
     this->y2 = y2;
     this->x2 = x2;
@@ -95,23 +106,17 @@ typedef struct Area {
   }
 
   bool operator >(const Area &a) const{
-    return population < a.population;
+    if(g_mode == DIVIDED){
+      return population < a.population;
+    }else{
+      return population/(double)landCount < a.population/(double)a.landCount;
+    }
   }
 } AREA;
 
 // 世界地図
 CELL g_worldMap[MAX_H][MAX_W];
 
-int queryRegion(int x1, int y1, int x2, int y2){
-  y1 = (g_height-1) - y1;
-  y2 = (g_height-1) - y2;
-  int num = 0;
-  //fprintf(stderr,"send query: y1 = %d, x1 = %d, y2 = %d, x2 = %d\n", y1, x1, y2, x2);
-  cout << "?" << endl;
-  cout << x1 << ' ' << y1 << ' ' <<  x2 << ' ' << y2 << endl;
-  cin >> num;
-  return num;
-}
 
 class PopulationMapping {
   public:
@@ -145,6 +150,17 @@ class PopulationMapping {
       fprintf(stderr,"limitPopulation = %4.2f\n", g_limitPopulation);
     }
 
+    int queryRegion(int x1, int y1, int x2, int y2){
+      y1 = (g_height-1) - y1;
+      y2 = (g_height-1) - y2;
+      int num = 0;
+      //fprintf(stderr,"send query: y1 = %d, x1 = %d, y2 = %d, x2 = %d\n", y1, x1, y2, x2);
+      cout << "?" << endl;
+      cout << x1 << ' ' << y1 << ' ' <<  x2 << ' ' << y2 << endl;
+      cin >> num;
+      return num;
+    }
+
     CELL* getCell(int y, int x){
       return &g_worldMap[y][x];
     }
@@ -163,13 +179,30 @@ class PopulationMapping {
       return landCount;
     }
 
-    void research(){
+    void selectArea(int y1, int x1, int y2, int x2){
+      for(int y = y2; y <= y1; y++){
+        for(int x = x1; x <= x2; x++){
+          CELL *cell = getCell((g_height-1-y),x);
+          if(cell->isLand()){
+            cell->selected = true;
+          }
+        }
+      }
+    }
+
+    vector<AREA> research(){
+      vector<AREA> result;
       priority_queue<AREA, vector<AREA>, greater<AREA> > que;
+      priority_queue<AREA, vector<AREA>, greater<AREA> > fque;
       que.push(AREA(g_height-1, 0, 0, g_width-1));
 
-      for(int i = 0; i < 10 && !que.empty(); i++){
+      for(int i = 0; i < 20 && !que.empty(); i++){
         AREA area = que.top(); que.pop();
         fprintf(stderr,"areaId = %d, population = %d\n", area.id, area.population);
+
+        if(area.dividedCount > 4){
+          fque.push(area);
+        }
 
         vector<AREA> areaList = divideArea4(area);
 
@@ -177,13 +210,36 @@ class PopulationMapping {
           AREA a = areaList[areaId];
 
           int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
+          //int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
           a.population = population;
           a.landCount = calcLandCount(a.y1, a.x1, a.y2, a.x2);
-          fprintf(stderr,"y1 = %d, x1 = %d, y2 = %d, x2 = %d, landCount = %d, population = %d\n", a.y1, a.x1, a.y2, a.x2, a.landCount, population);
+          //fprintf(stderr,"y1 = %d, x1 = %d, y2 = %d, x2 = %d, landCount = %d, population = %d\n", a.y1, a.x1, a.y2, a.x2, a.landCount, population);
 
-          que.push(a);
+          if(a.landCount > 0){
+            que.push(a);
+          }
         }
       }
+
+      int currentPopulation = g_totalPopulation;
+      g_mode = FINAL;
+
+      while(!que.empty()){
+        AREA area = que.top(); que.pop();
+        fque.push(area);
+      }
+
+      while(!fque.empty() && currentPopulation >= g_limitPopulation){
+        AREA area = fque.top(); fque.pop();
+        currentPopulation -= area.population;
+      }
+
+      while(!fque.empty()){
+        AREA area = fque.top(); fque.pop();
+        selectArea(area.y1, area.x1, area.y2, area.x2);
+      }
+
+      return result;
     }
 
     /*
@@ -217,6 +273,11 @@ class PopulationMapping {
       AREA area3 = AREA(p7.y, p7.x, p5.y+1, p5.x);
       AREA area4 = AREA(p8.y, p8.x+1, p6.y+1, p6.x);
 
+      area1.dividedCount = area.dividedCount + 1;
+      area2.dividedCount = area.dividedCount + 1;
+      area3.dividedCount = area.dividedCount + 1;
+      area4.dividedCount = area.dividedCount + 1;
+
       vector<AREA> areaList;
       areaList.push_back(area1);
       areaList.push_back(area2);
@@ -229,6 +290,7 @@ class PopulationMapping {
     vector <string> mapPopulation(int maxPercentage, vector<string> worldMap, int totalPopulation){
       init(maxPercentage, worldMap, totalPopulation);
       vector<string> result;
+      research();
 
       for(int y = 0; y < g_height; y++){
         string line = "";
@@ -236,7 +298,7 @@ class PopulationMapping {
         for(int x = 0; x < g_width; x++){
           CELL *cell = getCell(y, x);
 
-          if(cell->landType == LAND && xor128() % 100 < 10){
+          if(cell->selected){
             line += 'X';
           }else{
             line += '.';
@@ -244,8 +306,6 @@ class PopulationMapping {
         }
         result.push_back(line);
       }
-
-      research();
 
       return result;
     }
@@ -267,27 +327,20 @@ class PopulationMapping {
 };
 
 int main(){
-  int maxPercentage, totalPopulation, height;
+  int maxPercentage,totalPopulation,height;string line;vector<string> worldMap;
   cin >> maxPercentage;
   cin >> height;
-  string line;
-  vector<string> worldMap;
-
+  
   for(int i = 0; i < height; i++){
     cin >> line;
     worldMap.push_back(line);
   }
-
   scanf("%d", &totalPopulation);
-
   PopulationMapping pm;
-
   vector<string> ret = pm.mapPopulation(maxPercentage, worldMap, totalPopulation);
   cout << ret.size() << endl;
-
   for(int i = 0; i < ret.size(); i++){
     cout << ret[i] << endl;
   }
-
   return 0;
 }
