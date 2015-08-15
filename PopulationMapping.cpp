@@ -65,6 +65,10 @@ typedef struct Cell {
   Cell(int landType = OCEAN){
     this->landType = landType;
   }
+
+  bool isLand(){
+    return landType == LAND;
+  }
 } CELL;
 
 typedef struct Area {
@@ -73,6 +77,8 @@ typedef struct Area {
   int x1;
   int y2;
   int x2;
+  int landCount;
+  int s;
   int population;
 
   Area(int y1, int x1, int y2, int x2){
@@ -81,6 +87,8 @@ typedef struct Area {
     this->x1 = x1;
     this->y2 = y2;
     this->x2 = x2;
+    this->landCount = 0;
+    this->s = abs(y2-y1) * abs(x2-x1);
     this->population = UNDEFINED;
 
     g_areaId += 1;
@@ -141,11 +149,25 @@ class PopulationMapping {
       return &g_worldMap[y][x];
     }
 
+    int calcLandCount(int y1, int x1, int y2, int x2){
+      int landCount = 0;
+
+      for(int y = y2; y <= y1; y++){
+        for(int x = x1; x <= x2; x++){
+          CELL *cell = getCell((g_height-1-y),x);
+
+          landCount += (int)cell->isLand();
+        }
+      }
+
+      return landCount;
+    }
+
     void research(){
       priority_queue<AREA, vector<AREA>, greater<AREA> > que;
       que.push(AREA(g_height-1, 0, 0, g_width-1));
 
-      for(int i = 0; i < 20 && !que.empty(); i++){
+      for(int i = 0; i < 10 && !que.empty(); i++){
         AREA area = que.top(); que.pop();
         fprintf(stderr,"areaId = %d, population = %d\n", area.id, area.population);
 
@@ -156,7 +178,8 @@ class PopulationMapping {
 
           int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
           a.population = population;
-          fprintf(stderr,"y1 = %d, x1 = %d, y2 = %d, x2 = %d, population = %d\n", a.y1, a.x1, a.y2, a.x2, population);
+          a.landCount = calcLandCount(a.y1, a.x1, a.y2, a.x2);
+          fprintf(stderr,"y1 = %d, x1 = %d, y2 = %d, x2 = %d, landCount = %d, population = %d\n", a.y1, a.x1, a.y2, a.x2, a.landCount, population);
 
           que.push(a);
         }
@@ -225,6 +248,21 @@ class PopulationMapping {
       research();
 
       return result;
+    }
+
+    void showMap(){
+      for(int y = 0; y < g_height; y++){
+        for(int x = 0; x < g_width; x++){
+          CELL *cell = getCell(y,x);
+
+          if(cell->isLand()){
+            fprintf(stderr,"X");
+          }else{
+            fprintf(stderr,".");
+          }
+        }
+        fprintf(stderr,"\n");
+      }
     }
 };
 
