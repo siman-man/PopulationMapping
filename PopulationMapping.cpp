@@ -91,7 +91,7 @@ typedef struct Area {
   int s;
   int population;
 
-  Area(int y1, int x1, int y2, int x2){
+  Area(int y1 = UNDEFINED, int x1 = UNDEFINED, int y2 = UNDEFINED, int x2 = UNDEFINED){
     this->id = g_areaId;
     this->y1 = y1;
     this->dividedCount = 0;
@@ -196,15 +196,15 @@ class PopulationMapping {
       priority_queue<AREA, vector<AREA>, greater<AREA> > fque;
       que.push(AREA(g_height-1, 0, 0, g_width-1));
 
-      for(int i = 0; i < 20 && !que.empty(); i++){
+      for(int i = 0; i < 40 && !que.empty(); i++){
         AREA area = que.top(); que.pop();
-        fprintf(stderr,"areaId = %d, population = %d\n", area.id, area.population);
+        //fprintf(stderr,"areaId = %d, population = %d\n", area.id, area.population);
 
-        if(area.dividedCount > 4){
+        if(area.dividedCount > 10){
           fque.push(area);
         }
 
-        vector<AREA> areaList = divideArea4(area);
+        vector<AREA> areaList = divideArea2(area);
 
         for(int areaId = 0; areaId < areaList.size(); areaId++){
           AREA a = areaList[areaId];
@@ -240,6 +240,53 @@ class PopulationMapping {
       }
 
       return result;
+    }
+
+    /*
+     *   p1  p2  p3
+     *    +--+--+
+     *    |  |  |
+     * p4 +--+--+ p6
+     *    |  |  |
+     *    +--+--+
+     *  p7  p8  p9
+     */
+    vector<AREA> divideArea2(AREA area){
+      int height = area.y1 - area.y2 + 1;
+      int width  = area.x2 - area.x1 + 1;
+      //fprintf(stderr,"height = %d, width = %d\n", height, width);
+      int diff_h = height/2-1;
+      int diff_w = width/2-1;
+
+      COORD p1(area.y2,        area.x1);
+      COORD p2(area.y2,        area.x1+diff_w);
+      COORD p3(area.y2,        area.x2);
+      COORD p4(area.y2+diff_h, area.x1);
+      COORD p5(area.y2+diff_h, area.x1+diff_w);
+      COORD p6(area.y2+diff_h, area.x2);
+      COORD p7(area.y1,        area.x1);
+      COORD p8(area.y1,        area.x1+diff_w);
+      COORD p9(area.y1,        area.x2);
+
+      AREA area1;
+      AREA area2;
+
+      if(height > width){
+        area1 = AREA(p4.y-1, p4.x, p3.y, p3.x);
+        area2 = AREA(p7.y, p7.x, p6.y, p6.x);
+      }else{
+        area1 = AREA(p7.y, p7.x, p2.y, p2.x);
+        area2 = AREA(p8.y, p8.x+1, p3.y, p3.x);
+      }
+
+      area1.dividedCount = area.dividedCount + 1;
+      area2.dividedCount = area.dividedCount + 1;
+
+      vector<AREA> areaList;
+      areaList.push_back(area1);
+      areaList.push_back(area2);
+
+      return areaList;
     }
 
     /*

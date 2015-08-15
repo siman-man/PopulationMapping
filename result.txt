@@ -1,260 +1,59 @@
 H = 50, W = 50
 totalPopulation = 170099, g_maxPercentage = 30
 limitPopulation = 51029.70
-areaId = 0, population = -1
-areaId = 2, population = 125611
-areaId = 5, population = 53680
-areaId = 6, population = 49242
-areaId = 1, population = 30888
-areaId = 18, population = 23407
-areaId = 16, population = 16467
-areaId = 15, population = 14982
-areaId = 10, population = 14736
-areaId = 9, population = 14677
-areaId = 12, population = 14015
-areaId = 8, population = 13255
-areaId = 24, population = 11134
-areaId = 13, population = 10696
-areaId = 11, population = 10252
-areaId = 46, population = 10026
-areaId = 22, population = 9466
-areaId = 7, population = 9434
-areaId = 4, population = 9062
-areaId = 14, population = 7097
-Area = 397
+Area = 388
 Queries = 80
-Score = 288.096233633856
+Score = 281.5650847605444
 H = 60, W = 60
 totalPopulation = 310037, g_maxPercentage = 20
 limitPopulation = 62007.40
-areaId = 0, population = -1
-areaId = 1, population = 114385
-areaId = 4, population = 75537
-areaId = 3, population = 63293
-areaId = 6, population = 59129
-areaId = 2, population = 56822
-areaId = 8, population = 42403
-areaId = 9, population = 38260
-areaId = 16, population = 31951
-areaId = 14, population = 24807
-areaId = 21, population = 22390
-areaId = 11, population = 17756
-areaId = 18, population = 17521
-areaId = 29, population = 16530
-areaId = 20, population = 16301
-areaId = 28, population = 15380
-areaId = 19, population = 15179
-areaId = 10, population = 14880
-areaId = 34, population = 14053
-areaId = 5, population = 11939
-Area = 773
+Area = 671
 Queries = 80
-Score = 560.9531198966515
+Score = 486.9334326657868
 H = 70, W = 70
 totalPopulation = 378706, g_maxPercentage = 44
 limitPopulation = 166630.64
-areaId = 0, population = -1
-areaId = 2, population = 192860
-areaId = 4, population = 77454
-areaId = 3, population = 68399
-areaId = 7, population = 56567
-areaId = 6, population = 53171
-areaId = 8, population = 45523
-areaId = 1, population = 39993
-areaId = 5, population = 37599
-areaId = 16, population = 34483
-areaId = 9, population = 31322
-areaId = 11, population = 30863
-areaId = 14, population = 30448
-areaId = 17, population = 28140
-areaId = 23, population = 23230
-areaId = 32, population = 22831
-areaId = 38, population = 20407
-areaId = 52, population = 18313
-areaId = 19, population = 17965
-areaId = 36, population = 17266
-Area = 1272
+Area = 1205
 Queries = 80
-Score = 923.0690407613723
+Score = 874.4482658156082
 H = 142, W = 78
 totalPopulation = 442930, g_maxPercentage = 8
 limitPopulation = 35434.40
-areaId = 0, population = -1
-areaId = 4, population = 221321
-areaId = 3, population = 105035
-areaId = 6, population = 99791
-areaId = 10, population = 80216
-areaId = 20, population = 80099
-areaId = 5, population = 77774
-areaId = 2, population = 64765
-areaId = 16, population = 61261
-areaId = 27, population = 59914
-areaId = 1, population = 51809
-areaId = 8, population = 43320
-areaId = 22, population = 32238
-areaId = 36, population = 28860
-areaId = 24, population = 27587
-areaId = 30, population = 25700
-areaId = 14, population = 22412
-areaId = 43, population = 22189
-areaId = 40, population = 20142
-areaId = 29, population = 17668
-Area = 383
+Area = 317
 Queries = 80
-Score = 277.9366687198157
+Score = 230.04157698219734
 H = 414, W = 189
 totalPopulation = 5315367, g_maxPercentage = 32
 limitPopulation = 1700917.44
-areaId = 0, population = -1
-areaId = 1, population = 3695075
-areaId = 6, population = 2009372
-areaId = 2, population = 1444100
-areaId = 5, population = 1408914
-areaId = 12, population = 763224
-areaId = 13, population = 742625
-areaId = 14, population = 698535
-areaId = 18, population = 690454
-areaId = 11, population = 581528
-areaId = 9, population = 521196
-areaId = 31, population = 430741
-areaId = 23, population = 407493
-areaId = 34, population = 302191
-areaId = 41, population = 288767
-areaId = 20, population = 280645
-areaId = 28, population = 274161
-areaId = 40, population = 269597
-areaId = 27, population = 237533
-areaId = 17, population = 234060
-Area = 9697
+Area = 9792
 Queries = 80
-Score = 7036.950069389172
+Score = 7105.889974163017
 H = 183, W = 391
 totalPopulation = 9526812, g_maxPercentage = 40
 limitPopulation = 3810724.80
-areaId = 0, population = -1
-areaId = 4, population = 5369525
-areaId = 2, population = 2984182
-areaId = 6, population = 2132246
-areaId = 5, population = 1683571
-areaId = 10, population = 1096581
-areaId = 8, population = 1056941
-areaId = 11, population = 888638
-areaId = 13, population = 860522
-areaId = 18, population = 826913
-areaId = 21, population = 740754
-areaId = 15, population = 731053
-areaId = 1, population = 627630
-areaId = 25, population = 613938
-areaId = 3, population = 545475
-areaId = 9, population = 515755
-areaId = 20, population = 504844
-areaId = 7, population = 496767
-areaId = 12, population = 483208
-areaId = 36, population = 435688
-Area = 19435
+Area = 18804
 Queries = 80
-Score = 14103.65315031232
+Score = 13645.747045972363
 H = 388, W = 235
 totalPopulation = 1716922, g_maxPercentage = 15
 limitPopulation = 257538.30
-areaId = 0, population = -1
-areaId = 2, population = 1544514
-areaId = 6, population = 741659
-areaId = 11, population = 689352
-areaId = 5, population = 635223
-areaId = 20, population = 574972
-areaId = 15, population = 479518
-areaId = 24, population = 231414
-areaId = 16, population = 172681
-areaId = 22, population = 165218
-areaId = 28, population = 163830
-areaId = 3, population = 150220
-areaId = 8, population = 136457
-areaId = 45, population = 135981
-areaId = 30, population = 135370
-areaId = 26, population = 127818
-areaId = 21, population = 115151
-areaId = 49, population = 114122
-areaId = 25, population = 110751
-areaId = 39, population = 95453
-Area = 1722
-Queries = 80
-Score = 1249.6264844269522
+Selected areas count too much population.
+Score = -1.0
 H = 401, W = 437
 totalPopulation = 19856833, g_maxPercentage = 37
 limitPopulation = 7347028.21
-areaId = 0, population = -1
-areaId = 4, population = 9560799
-areaId = 2, population = 9303820
-areaId = 5, population = 4476857
-areaId = 6, population = 3774784
-areaId = 12, population = 3437866
-areaId = 9, population = 3149936
-areaId = 24, population = 1895828
-areaId = 28, population = 1880230
-areaId = 19, population = 1656563
-areaId = 11, population = 1506392
-areaId = 15, population = 1389710
-areaId = 13, population = 1347223
-areaId = 18, population = 1319202
-areaId = 10, population = 1209626
-areaId = 8, population = 1153236
-areaId = 32, population = 1006690
-areaId = 36, population = 1005192
-areaId = 46, population = 999582
-areaId = 39, population = 966131
-Area = 46889
+Area = 45406
 Queries = 80
-Score = 34026.55994674527
+Score = 32950.37174906515
 H = 222, W = 97
 totalPopulation = 562170, g_maxPercentage = 33
 limitPopulation = 185516.10
-areaId = 0, population = -1
-areaId = 3, population = 253243
-areaId = 7, population = 238539
-areaId = 1, population = 223376
-areaId = 11, population = 167197
-areaId = 14, population = 105731
-areaId = 23, population = 85486
-areaId = 2, population = 77279
-areaId = 15, population = 73629
-areaId = 20, population = 72513
-areaId = 33, population = 70813
-areaId = 30, population = 56137
-areaId = 19, population = 53689
-areaId = 27, population = 52840
-areaId = 13, population = 43186
-areaId = 12, population = 42131
-areaId = 46, population = 37491
-areaId = 41, population = 35238
-areaId = 63, population = 34731
-areaId = 65, population = 29391
-Area = 866
+Area = 859
 Queries = 80
-Score = 628.4416582542048
+Score = 623.3618757971846
 H = 442, W = 299
 totalPopulation = 4296479, g_maxPercentage = 62
 limitPopulation = 2663816.98
-areaId = 0, population = -1
-areaId = 1, population = 1703840
-areaId = 4, population = 1613592
-areaId = 11, population = 1478066
-areaId = 5, population = 939173
-areaId = 2, population = 838734
-areaId = 16, population = 757866
-areaId = 25, population = 624971
-areaId = 17, population = 557680
-areaId = 15, population = 529772
-areaId = 7, population = 514716
-areaId = 21, population = 477605
-areaId = 46, population = 453550
-areaId = 34, population = 341561
-areaId = 42, population = 311519
-areaId = 19, population = 287136
-areaId = 52, population = 275490
-areaId = 38, population = 262891
-areaId = 30, population = 214855
-areaId = 8, population = 205289
-Area = 11629
+Area = 11684
 Queries = 80
-Score = 8438.970027526728
+Score = 8478.882603974744
