@@ -100,9 +100,13 @@ typedef struct Area {
     this->x2 = x2;
     this->landCount = 0;
     this->s = abs(y2-y1) * abs(x2-x1);
-    this->population = UNDEFINED;
+    this->population = INT_MAX;
 
     g_areaId += 1;
+  }
+
+  double populationRate(){
+    return population / (double)g_totalPopulation;
   }
 
   bool operator >(const Area &a) const{
@@ -190,21 +194,28 @@ class PopulationMapping {
       }
     }
 
+    int directDivideCount(){
+      return 15;
+    }
+
     vector<AREA> research(){
       vector<AREA> result;
+      vector<AREA> areaList;
       priority_queue<AREA, vector<AREA>, greater<AREA> > que;
       priority_queue<AREA, vector<AREA>, greater<AREA> > fque;
       que.push(AREA(g_height-1, 0, 0, g_width-1));
 
-      for(int i = 0; i < 40 && !que.empty(); i++){
+      int divideLimit = directDivideCount();
+
+      for(int i = 0; i < divideLimit && !que.empty(); i++){
         AREA area = que.top(); que.pop();
         //fprintf(stderr,"areaId = %d, population = %d\n", area.id, area.population);
 
-        if(area.dividedCount > 10){
-          fque.push(area);
+        if(i < 10){
+          areaList = divideArea2(area);
+        }else{
+          areaList = divideArea4(area);
         }
-
-        vector<AREA> areaList = divideArea2(area);
 
         for(int areaId = 0; areaId < areaList.size(); areaId++){
           AREA a = areaList[areaId];
