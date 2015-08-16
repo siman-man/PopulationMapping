@@ -249,7 +249,6 @@ class PopulationMapping {
 
         for(int areaId = 0; areaId < areaList.size(); areaId++){
           AREA a = areaList[areaId];
-          a.landCount = calcLandCount(a.y1, a.x1, a.y2, a.x2);
 
           if(a.landCount > 0){
             // 最後のエリアの人口は残りの部分から逆算できる
@@ -284,8 +283,6 @@ class PopulationMapping {
         fque.push(area);
       }
 
-      fprintf(stderr,"fque size = %ld\n", fque.size());
-
       while(!fque.empty() && currentPopulation >= g_limitPopulation){
         AREA area = fque.top(); fque.pop();
         g_areaList.push_back(area);
@@ -297,6 +294,7 @@ class PopulationMapping {
         currentPopulation -= area.population;
       }
 
+      fprintf(stderr,"fque size = %ld\n", fque.size());
       fprintf(stderr,"currentPopulation = %d\n", currentPopulation);
       vector<AREA> selectedArea;
 
@@ -352,12 +350,12 @@ class PopulationMapping {
        *    +--+--+
        *  p7  p8  p9
        */
-      vector<AREA> divideArea2(AREA area){
+      vector<AREA> divideArea2(AREA area, int offset = 0){
         int height = abs(area.y1-area.y2) + 1;
         int width  = abs(area.x2-area.x1) + 1;
         //fprintf(stderr,"height = %d, width = %d\n", height, width);
-        int diff_h = height/2-1;
-        int diff_w = width/2-1;
+        int diff_h = height/2-1 + offset;
+        int diff_w = width/2-1 + offset;
 
         COORD p1(area.y2,        area.x1);
         COORD p2(area.y2,        area.x1+diff_w);
@@ -371,6 +369,7 @@ class PopulationMapping {
 
         AREA area1;
         AREA area2;
+        int direct = 0;
 
         if(height > width){
           area1 = AREA(p4.y-1, p4.x, p3.y, p3.x);
@@ -378,10 +377,13 @@ class PopulationMapping {
         }else{
           area1 = AREA(p7.y, p7.x, p2.y, p2.x);
           area2 = AREA(p8.y, p8.x+1, p3.y, p3.x);
+          direct = 1;
         }
 
         area1.dividedCount = area.dividedCount + 1;
         area2.dividedCount = area.dividedCount + 1;
+        area1.landCount = calcLandCount(area1.y1, area1.x1, area1.y2, area1.x2);
+        area2.landCount = calcLandCount(area2.y1, area2.x1, area2.y2, area2.x2);
 
         vector<AREA> areaList;
         areaList.push_back(area1);
@@ -425,6 +427,10 @@ class PopulationMapping {
         area2.dividedCount = area.dividedCount + 1;
         area3.dividedCount = area.dividedCount + 1;
         area4.dividedCount = area.dividedCount + 1;
+        area1.landCount = calcLandCount(area1.y1, area1.x1, area1.y2, area1.x2);
+        area2.landCount = calcLandCount(area2.y1, area2.x1, area2.y2, area2.x2);
+        area3.landCount = calcLandCount(area3.y1, area3.x1, area3.y2, area3.x2);
+        area4.landCount = calcLandCount(area4.y1, area4.x1, area4.y2, area4.x2);
 
         vector<AREA> areaList;
         areaList.push_back(area1);
