@@ -6,7 +6,7 @@ end
 
 task :run do
   system("g++ -W -Wall -Wno-sign-compare -O2 -o #{@filename} #{@filename}.cpp")
-  system("java -jar ./#{@filename}Vis.jar -scale 7 -seed 0 -exec './#{@filename}'")
+  system("java -jar ./#{@filename}Vis.jar -scale 1 -seed 7 -exec './#{@filename}'")
   #system("java -jar ./#{@filename}Vis.jar -side 12 -seed 105 -exec './#{@filename}'")
 end
 
@@ -17,7 +17,7 @@ end
 
 task :one do
   system("g++ -W -Wall -Wno-sign-compare -O2 -o #{@filename} #{@filename}.cpp")
-  system("time java -jar #{@filename}Vis.jar -seed 0 -novis -exec './#{@filename}'")
+  system("time java -jar #{@filename}Vis.jar -seed 1 -novis -exec './#{@filename}'")
 end
 
 task :two do
@@ -28,7 +28,7 @@ end
 task :novis do
   system('rm result.txt')
   system("g++ -W -Wall -Wno-sign-compare -O2 -o #{@filename} #{@filename}.cpp")
-  1.upto(100) do |num|
+  101.upto(200) do |num|
     p num
     system("time java -jar ./#{@filename}Vis.jar -seed #{num} -novis -exec './#{@filename}' >> result.txt")
   end
@@ -38,7 +38,7 @@ end
 task :final do
   system('rm result.txt')
   system("g++ -W -Wall -Wno-sign-compare -O2 -o #{@filename} #{@filename}.cpp")
-  1.upto(1000) do |num|
+  1000.upto(1999) do |num|
     p num
     system("time java -jar ./#{@filename}Vis.jar -seed #{num} -novis -exec './#{@filename}' >> result.txt")
     sleep(1.0)

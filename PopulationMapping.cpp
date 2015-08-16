@@ -109,6 +109,14 @@ typedef struct Area {
     return population / (double)g_totalPopulation;
   }
 
+  double populationDensity(){
+    return population / (double)s;
+  }
+
+  double landRatio(){
+    return landCount / (double)s;
+  };
+
   bool operator >(const Area &a) const{
     if(g_mode == DIVIDED){
       return population < a.population;
@@ -194,24 +202,29 @@ class PopulationMapping {
       }
     }
 
-    int directDivideCount(){
-      return 15;
-    }
-
     vector<AREA> research(){
       vector<AREA> result;
       vector<AREA> areaList;
       priority_queue<AREA, vector<AREA>, greater<AREA> > que;
       priority_queue<AREA, vector<AREA>, greater<AREA> > fque;
-      que.push(AREA(g_height-1, 0, 0, g_width-1));
+      AREA rootArea(g_height-1, 0, 0, g_width-1);
+      rootArea.population = g_totalPopulation;
+      que.push(rootArea);
 
-      int divideLimit = directDivideCount();
+      int divideCount = 20;
 
-      for(int i = 0; i < divideLimit && !que.empty(); i++){
+      for(int i = 0; i < divideCount && !que.empty(); i++){
         AREA area = que.top(); que.pop();
+        int tempPopulation = area.population;
+        int sumPopulation = 0;
         //fprintf(stderr,"areaId = %d, population = %d\n", area.id, area.population);
 
-        if(i < 10){
+        if(area.population == 0){
+          fque.push(area);
+        }
+
+        //if(area.landRatio() < 0.6){
+        if(i < 16){
           areaList = divideArea2(area);
         }else{
           areaList = divideArea4(area);
@@ -219,15 +232,28 @@ class PopulationMapping {
 
         for(int areaId = 0; areaId < areaList.size(); areaId++){
           AREA a = areaList[areaId];
-
-          int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
-          //int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
-          a.population = population;
           a.landCount = calcLandCount(a.y1, a.x1, a.y2, a.x2);
-          //fprintf(stderr,"y1 = %d, x1 = %d, y2 = %d, x2 = %d, landCount = %d, population = %d\n", a.y1, a.x1, a.y2, a.x2, a.landCount, population);
 
           if(a.landCount > 0){
-            que.push(a);
+            // 最後のエリアの人口は残りの部分から逆算できる
+            if(areaId == areaList.size()-1){
+              a.population = area.population - sumPopulation;
+            }else{
+              int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
+              //int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
+              tempPopulation -= population;
+              sumPopulation += population;
+              a.population = population;
+            }
+            //fprintf(stderr,"y1 = %d, x1 = %d, y2 = %d, x2 = %d, landCount = %d, population = %d\n", a.y1, a.x1, a.y2, a.x2, a.landCount, population);
+
+            if(a.populationRate() < 0.025){
+              fque.push(a);
+            }else if(a.dividedCount <= 5 || a.populationRate() < 0.03){
+              que.push(a);
+            }else{
+              fque.push(a);
+            }
           }
         }
       }
@@ -244,6 +270,8 @@ class PopulationMapping {
         AREA area = fque.top(); fque.pop();
         currentPopulation -= area.population;
       }
+
+      fprintf(stderr,"currentPopulation = %d\n", currentPopulation);
 
       while(!fque.empty()){
         AREA area = fque.top(); fque.pop();
@@ -263,8 +291,8 @@ class PopulationMapping {
      *  p7  p8  p9
      */
     vector<AREA> divideArea2(AREA area){
-      int height = area.y1 - area.y2 + 1;
-      int width  = area.x2 - area.x1 + 1;
+      int height = abs(area.y1-area.y2) + 1;
+      int width  = abs(area.x2-area.x1) + 1;
       //fprintf(stderr,"height = %d, width = %d\n", height, width);
       int diff_h = height/2-1;
       int diff_w = width/2-1;
