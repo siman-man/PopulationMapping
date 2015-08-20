@@ -133,18 +133,15 @@ vector<AREA> g_areaList;
 CELL g_worldMap[MAX_H][MAX_W];
 
 typedef struct Node {
-  int population;
-  int landCount;
+  int sumPopulation;
+  int sumLandCount;
   vector<int> areaIdList;
 
-  Node(int population = 0, int landCount = 0){
-    this->population = population;
-    this->landCount = landCount;
+  Node(int sumPopulation = INT_MAX/2, int sumLandCount = 0){
+    this->sumPopulation = sumPopulation;
+    this->sumLandCount = sumLandCount;
+    this->areaIdList = vector<int>();
   }
-
-  bool operator >(const Node &e) const{
-    return landCount < e.landCount;
-  }    
 } NODE;
 
 class PopulationMapping {
@@ -221,16 +218,17 @@ class PopulationMapping {
 
     vector<AREA> research(){
       vector<AREA> result;
-      priority_queue<AREA, vector<AREA>, greater<AREA> > que;
       priority_queue<AREA, vector<AREA>, greater<AREA> > fque;
+      priority_queue<AREA, vector<AREA>, greater<AREA> > currentAreaQueue;
+
       AREA rootArea(g_height-1, 0, 0, g_width-1);
       rootArea.population = g_totalPopulation;
-      que.push(rootArea);
+      currentAreaQueue.push(rootArea);
 
       int divideCount = 20;
 
-      for(int i = 0; i < divideCount && !que.empty(); i++){
-        AREA area = que.top(); que.pop();
+      for(int i = 0; i < divideCount && !currentAreaQueue.empty(); i++){
+        AREA area = currentAreaQueue.top(); currentAreaQueue.pop();
         vector<AREA> areaList;
         int tempPopulation = area.population;
         int sumPopulation = 0;
@@ -240,7 +238,6 @@ class PopulationMapping {
           fque.push(area);
         }
 
-        //if(area.landRatio() < 0.6){
         if(i < 16){
           areaList = divideArea2(area);
         }else{
@@ -266,7 +263,7 @@ class PopulationMapping {
             if(a.populationRate() < 0.025){
               fque.push(a);
             }else if(a.dividedCount <= 5 || a.populationRate() < 0.03){
-              que.push(a);
+              currentAreaQueue.push(a);
             }else{
               fque.push(a);
             }
@@ -274,69 +271,66 @@ class PopulationMapping {
         }
       }
 
-      int currentPopulation = g_totalPopulation;
       g_mode = FINAL;
 
-
-      while(!que.empty()){
-        AREA area = que.top(); que.pop();
+      while(!currentAreaQueue.empty()){
+        AREA area = currentAreaQueue.top(); currentAreaQueue.pop();
         fque.push(area);
       }
 
-      while(!fque.empty() && currentPopulation >= g_limitPopulation){
-        AREA area = fque.top(); fque.pop();
-        g_areaList.push_back(area);
-
-        if(currentPopulation - area.population < g_limitPopulation){
-          fque.push(area);
-          break;
-        }
-        currentPopulation -= area.population;
-      }
-
-      fprintf(stderr,"fque size = %ld\n", fque.size());
-      fprintf(stderr,"currentPopulation = %d\n", currentPopulation);
-      vector<AREA> selectedArea;
-
       while(!fque.empty()){
         AREA area = fque.top(); fque.pop();
-        selectedArea.push_back(area);
         g_areaList.push_back(area);
-        //selectArea(area.y1, area.x1, area.y2, area.x2);
       }
 
-      int sumPopulation = 0;
-      int sumLandCount = 0;
-
-      for(int i = 0; i < selectedArea.size(); i++){
-        AREA area = selectedArea[i];
-        sumPopulation += area.population;
-        sumLandCount += area.landCount;
-      }
-
-      int bestId;
       int maxLandCount = INT_MIN;
 
-      for(int i = 0; i < selectedArea.size(); i++){
-        AREA area = selectedArea[i];
-        int p = sumPopulation - area.population;
-        int lc = sumLandCount - area.landCount;
-
-        if(p < g_limitPopulation && maxLandCount < lc){
-          maxLandCount = lc;
-          bestId = area.id;
-        }
-      }
-
-      for(int i = 0; i < selectedArea.size(); i++){
-        AREA area = selectedArea[i];
-
-        if(bestId != area.id){
-          selectArea(area.y1, area.x1, area.y2, area.x2);
-        }
-      }
-
+      int g_areaSize = g_areaList.size();
       fprintf(stderr,"g_areaList size = %ld\n", g_areaList.size());
+
+      NODE dp[250001];
+      dp[0].sumPopulation = 0;
+      maxLandCount = 0;
+
+      for(int i = 0; i < g_areaSize; i++){
+        AREA area = g_areaList[i];
+
+        for(int j = maxLandCount; j >= 0; j--){
+          NODE node = dp[j];
+
+          int sumPopulation = node.sumPopulation + area.population;
+          if(sumPopulation >= g_limitPopulation) continue;
+
+          int sumLandCount = node.sumLandCount + area.landCount;
+          NODE nnode = dp[sumLandCount];
+
+          if(sumPopulation < nnode.sumPopulation){
+            node.sumPopulation = sumPopulation;
+            node.sumLandCount = sumLandCount;
+            maxLandCount = max(maxLandCount, sumLandCount);
+            node.areaIdList.push_back(i);
+
+            dp[sumLandCount] = node;
+          }
+        }
+      }
+
+      maxLandCount = 0;
+
+      for(int i = 250000; i >= 0; i--){
+        NODE node = dp[i];
+
+        if(maxLandCount < node.sumLandCount){
+          maxLandCount = node.sumLandCount;
+
+          for(int j = 0; j < node.areaIdList.size(); j++){
+            AREA area = g_areaList[node.areaIdList[j]];
+            selectArea(area.y1, area.x1, area.y2, area.x2);
+          }
+
+          break;
+        }
+      }
 
       return result;
     }
