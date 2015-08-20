@@ -118,11 +118,7 @@ typedef struct Area {
   };
 
   bool operator >(const Area &a) const{
-    if(g_mode == DIVIDED){
-      return population < a.population;
-    }else{
-      return population/(double)landCount < a.population/(double)a.landCount;
-    }
+    return population < a.population;
   }
 } AREA;
 
@@ -216,6 +212,21 @@ class PopulationMapping {
       }
     }
 
+    vector<AREA> pque2areaList(priority_queue<AREA, vector<AREA>, greater<AREA> > pque){
+      vector<AREA> areaList;
+
+      while(!pque.empty()){
+        AREA area = pque.top(); pque.pop();
+        areaList.push_back(area);
+      }
+
+      return areaList;
+    }
+
+    double calcScore(){
+      return 0.0;
+    }
+
     vector<AREA> research(){
       vector<AREA> result;
       priority_queue<AREA, vector<AREA>, greater<AREA> > fque;
@@ -258,9 +269,8 @@ class PopulationMapping {
               sumPopulation += population;
               a.population = population;
             }
-            //fprintf(stderr,"y1 = %d, x1 = %d, y2 = %d, x2 = %d, landCount = %d, population = %d\n", a.y1, a.x1, a.y2, a.x2, a.landCount, population);
 
-            if(a.populationRate() < 0.025){
+            if(a.populationRate() < g_maxPercentage * 0.0025){
               fque.push(a);
             }else if(a.dividedCount <= 5 || a.populationRate() < 0.03){
               currentAreaQueue.push(a);
@@ -270,8 +280,6 @@ class PopulationMapping {
           }
         }
       }
-
-      g_mode = FINAL;
 
       while(!currentAreaQueue.empty()){
         AREA area = currentAreaQueue.top(); currentAreaQueue.pop();
@@ -321,6 +329,7 @@ class PopulationMapping {
         NODE node = dp[i];
 
         if(maxLandCount < node.sumLandCount){
+          fprintf(stderr,"node.sumPopulation = %d\n", node.sumPopulation);
           maxLandCount = node.sumLandCount;
 
           for(int j = 0; j < node.areaIdList.size(); j++){
