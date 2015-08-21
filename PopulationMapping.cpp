@@ -120,7 +120,7 @@ typedef struct Area {
   };
 
   bool operator >(const Area &a) const{
-    return population < a.population;
+    return landCount < a.landCount;
   }
 } AREA;
 

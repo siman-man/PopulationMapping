@@ -6,7 +6,7 @@ end
 
 task :run do
   system("g++ -W -Wall -Wno-sign-compare -O2 -o #{@filename} #{@filename}.cpp")
-  system("java -jar ./#{@filename}Vis.jar -scale 5 -seed 3 -exec './#{@filename}'")
+  system("java -jar ./#{@filename}Vis.jar -scale 2 -seed 4 -exec './#{@filename}'")
   #system("java -jar ./#{@filename}Vis.jar -side 12 -seed 105 -exec './#{@filename}'")
 end
 
