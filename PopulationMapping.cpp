@@ -120,7 +120,9 @@ typedef struct Area {
   };
 
   bool operator >(const Area &a) const{
-    return landCount < a.landCount;
+    //return population/(double)landCount < a.population/(double)a.landCount;
+    //return landCount < a.landCount;
+    return s < a.s;
   }
 } AREA;
 
@@ -182,7 +184,6 @@ class PopulationMapping {
       y1 = (g_height-1) - y1;
       y2 = (g_height-1) - y2;
       int num = 0;
-      //fprintf(stderr,"send query: y1 = %d, x1 = %d, y2 = %d, x2 = %d\n", y1, x1, y2, x2);
       cout << "?" << endl;
       cout << x1 << ' ' << y1 << ' ' <<  x2 << ' ' << y2 << endl;
       cin >> num;
@@ -276,8 +277,8 @@ class PopulationMapping {
             if(areaId == areaList.size()-1){
               a.population = area.population - sumPopulation;
             }else{
-              int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
-              //int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
+              //int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
+              int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
               tempPopulation -= population;
               sumPopulation += population;
               a.population = population;
