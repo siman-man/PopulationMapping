@@ -60,7 +60,7 @@ int g_maxPercentage;
 // 制限人口
 double g_limitPopulation;
 // 陸地の数
-int g_landCount = 0;
+int g_totalLandCount = 0;
 // エリアID
 int g_areaId = 0;
 // モード
@@ -114,7 +114,7 @@ typedef struct Area {
   }
 
   double landRatio(){
-    return landCount / (double)s;
+    return landCount / (double)g_totalLandCount;
   };
 
   bool operator >(const Area &a) const{
@@ -149,7 +149,7 @@ class PopulationMapping {
       g_maxPercentage = maxPercentage;
       g_limitPopulation = g_totalPopulation * (g_maxPercentage/100.0);
 
-      g_landCount = 0;
+      g_totalLandCount = 0;
 
       for(int y = 0; y < g_height; y++){
         for(int x = 0; x < g_width; x++){
@@ -158,7 +158,7 @@ class PopulationMapping {
 
           if(ch == 'X'){
             cell.landType = LAND;
-            g_landCount += 1;
+            g_totalLandCount += 1;
           }else{
             cell.landType = OCEAN;
           }
@@ -170,6 +170,8 @@ class PopulationMapping {
       fprintf(stderr,"H = %d, W = %d\n", g_height, g_width);
       fprintf(stderr,"totalPopulation = %d, g_maxPercentage = %d\n", g_totalPopulation, g_maxPercentage);
       fprintf(stderr,"limitPopulation = %4.2f\n", g_limitPopulation);
+      fprintf(stderr,"totalLandCount = %d\n", g_totalLandCount);
+      fprintf(stderr,"average human = %4.2f\n", g_totalPopulation / (double)g_totalLandCount);
     }
 
     int queryRegion(int x1, int y1, int x2, int y2){
@@ -263,14 +265,14 @@ class PopulationMapping {
             if(areaId == areaList.size()-1){
               a.population = area.population - sumPopulation;
             }else{
-              int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
-              //int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
+              //int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
+              int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
               tempPopulation -= population;
               sumPopulation += population;
               a.population = population;
             }
 
-            if(a.populationRate() < g_maxPercentage * 0.0025){
+            if(a.populationRate() < g_maxPercentage * 0.002){
               fque.push(a);
             }else if(a.dividedCount <= 5 || a.populationRate() < 0.03){
               currentAreaQueue.push(a);
