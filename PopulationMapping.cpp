@@ -61,6 +61,8 @@ int g_maxPercentage;
 double g_limitPopulation;
 // 陸地の数
 int g_totalLandCount = 0;
+// 陸地の割合
+double g_worldLandRatio = 1.0;
 // エリアID
 int g_areaId = 0;
 // モード
@@ -114,7 +116,7 @@ typedef struct Area {
   }
 
   double landRatio(){
-    return landCount / (double)g_totalLandCount;
+    return landCount / (double)s;
   };
 
   bool operator >(const Area &a) const{
@@ -166,6 +168,8 @@ class PopulationMapping {
           g_worldMap[y][x] = cell;
         }
       }
+
+      g_worldLandRatio = g_totalLandCount / (double)(g_height * g_width);
 
       fprintf(stderr,"H = %d, W = %d\n", g_height, g_width);
       fprintf(stderr,"totalPopulation = %d, g_maxPercentage = %d\n", g_totalPopulation, g_maxPercentage);
@@ -229,6 +233,13 @@ class PopulationMapping {
       return 0.0;
     }
 
+    bool maybeExistCity(AREA area){
+      if(area.populationRate() > 0.1){
+        return true;
+      }
+      return false;
+    }
+
     vector<AREA> research(){
       vector<AREA> result;
       priority_queue<AREA, vector<AREA>, greater<AREA> > fque;
@@ -238,7 +249,7 @@ class PopulationMapping {
       rootArea.population = g_totalPopulation;
       currentAreaQueue.push(rootArea);
 
-      int divideCount = 20;
+      int divideCount = 23;
 
       for(int i = 0; i < divideCount && !currentAreaQueue.empty(); i++){
         AREA area = currentAreaQueue.top(); currentAreaQueue.pop();
@@ -251,7 +262,7 @@ class PopulationMapping {
           fque.push(area);
         }
 
-        if(i < 16){
+        if(i < divideCount - 4){
           areaList = divideArea2(area);
         }else{
           areaList = divideArea4(area);
@@ -265,8 +276,8 @@ class PopulationMapping {
             if(areaId == areaList.size()-1){
               a.population = area.population - sumPopulation;
             }else{
-              //int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
-              int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
+              int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
+              //int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
               tempPopulation -= population;
               sumPopulation += population;
               a.population = population;
