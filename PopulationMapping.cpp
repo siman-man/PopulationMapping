@@ -92,6 +92,7 @@ typedef struct Area {
   int landCount;
   int s;
   int population;
+  double populationRate;
 
   Area(int y1 = UNDEFINED, int x1 = UNDEFINED, int y2 = UNDEFINED, int x2 = UNDEFINED){
     this->id = g_areaId;
@@ -107,10 +108,6 @@ typedef struct Area {
     g_areaId += 1;
   }
 
-  double populationRate(){
-    return population / (double)g_totalPopulation;
-  }
-
   double populationDensity(){
     return population / (double)s;
   }
@@ -120,8 +117,6 @@ typedef struct Area {
   };
 
   bool operator >(const Area &a) const{
-    //return population/(double)landCount < a.population/(double)a.landCount;
-    //return landCount < a.landCount;
     return s < a.s;
   }
 } AREA;
@@ -235,7 +230,7 @@ class PopulationMapping {
     }
 
     bool maybeExistCity(AREA area){
-      if(area.populationRate() > 0.1){
+      if(area.populationRate > 0.1){
         return true;
       }
       return false;
@@ -283,10 +278,11 @@ class PopulationMapping {
               sumPopulation += population;
               a.population = population;
             }
+            a.populationRate = a.population / (double)g_totalPopulation;
 
-            if(a.populationRate() < g_maxPercentage * 0.002){
+            if(a.populationRate < g_maxPercentage * 0.002){
               fque.push(a);
-            }else if(a.dividedCount <= 5 || a.populationRate() < 0.03){
+            }else if(a.dividedCount <= 5 || a.populationRate < 0.03){
               currentAreaQueue.push(a);
             }else{
               fque.push(a);
@@ -409,6 +405,42 @@ class PopulationMapping {
         return areaList;
       }
 
+      void composeArea(AREA *area){
+        int y1 = area->y1;
+        int x1 = area->x1;
+        int y2 = area->y2;
+        int x2 = area->x2;
+        int landCount = 0;
+
+        // up
+        do{
+          area->y2 = y2;
+          y2 += 1;
+          landCount = calcLandCount(y1, x1, y2, x2);
+        }while(landCount == area->landCount && y2 < y1);
+
+        // down
+        do{
+          area->y1 = y1;
+          y1 -= 1;
+          landCount = calcLandCount(y1, x1, y2, x2);
+        }while(landCount == area->landCount && y2 < y1);
+
+        // left
+        do{
+          area->x1 = x1;
+          x1 += 1;
+          landCount = calcLandCount(y1, x1, y2, x2);
+        }while(landCount == area->landCount && x1 < x2);
+
+        // left
+        do{
+          area->x2 = x2;
+          x2 -= 1;
+          landCount = calcLandCount(y1, x1, y2, x2);
+        }while(landCount == area->landCount && x1 < x2);
+      }
+
       /*
        *   p1  p2  p3
        *    +--+--+
@@ -437,23 +469,24 @@ class PopulationMapping {
 
         AREA area1 = AREA(p4.y, p4.x, p2.y, p2.x);
         AREA area2 = AREA(p5.y, p5.x+1, p3.y, p3.x);
-        AREA area3 = AREA(p7.y, p7.x, p5.y+1, p5.x);
-        AREA area4 = AREA(p8.y, p8.x+1, p6.y+1, p6.x);
+        AREA area3 = AREA(p7.y, p7.x, p6.y+1, p6.x);
+        //AREA area3 = AREA(p7.y, p7.x, p5.y+1, p5.x);
+        //AREA area4 = AREA(p8.y, p8.x+1, p6.y+1, p6.x);
 
         area1.dividedCount = area.dividedCount + 1;
         area2.dividedCount = area.dividedCount + 1;
         area3.dividedCount = area.dividedCount + 1;
-        area4.dividedCount = area.dividedCount + 1;
+        //area4.dividedCount = area.dividedCount + 1;
         area1.landCount = calcLandCount(area1.y1, area1.x1, area1.y2, area1.x2);
         area2.landCount = calcLandCount(area2.y1, area2.x1, area2.y2, area2.x2);
         area3.landCount = calcLandCount(area3.y1, area3.x1, area3.y2, area3.x2);
-        area4.landCount = calcLandCount(area4.y1, area4.x1, area4.y2, area4.x2);
+        //area4.landCount = calcLandCount(area4.y1, area4.x1, area4.y2, area4.x2);
 
         vector<AREA> areaList;
         areaList.push_back(area1);
         areaList.push_back(area2);
         areaList.push_back(area3);
-        areaList.push_back(area4);
+        //areaList.push_back(area4);
 
         return areaList;
       }
