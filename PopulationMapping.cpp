@@ -261,7 +261,7 @@ class PopulationMapping {
         if(i < divideCount - 1){
           areaList = divideArea2(area);
         }else{
-          areaList = divideArea4(area);
+          areaList = divideArea3(area);
         }
 
         for(int areaId = 0; areaId < areaList.size(); areaId++){
@@ -398,6 +398,28 @@ class PopulationMapping {
         area1.landCount = calcLandCount(area1.y1, area1.x1, area1.y2, area1.x2);
         area2.landCount = calcLandCount(area2.y1, area2.x1, area2.y2, area2.x2);
 
+        for(int i = 0; i < 5; i++){
+          if(area1.landCount > area2.landCount){
+            if(direct == 0){
+              area1.y1 -= 1;
+              area2.y2 -= 1;
+            }else{
+              area1.x2 -= 1;
+              area2.x1 -= 1;
+            }
+          }else{
+            if(direct == 0){
+              area1.y1 += 1;
+              area2.y2 += 1;
+            }else{
+              area1.x2 += 1;
+              area2.x1 += 1;
+            }
+          }
+          area1.landCount = calcLandCount(area1.y1, area1.x1, area1.y2, area1.x2);
+          area2.landCount = calcLandCount(area2.y1, area2.x1, area2.y2, area2.x2);
+        }
+
         vector<AREA> areaList;
         areaList.push_back(area1);
         areaList.push_back(area2);
@@ -450,7 +472,7 @@ class PopulationMapping {
        *    +--+--+
        *  p7  p8  p9
        */
-      vector<AREA> divideArea4(AREA area){
+      vector<AREA> divideArea3(AREA area){
         int height = area.y1 - area.y2 + 1;
         int width  = area.x2 - area.x1 + 1;
         //fprintf(stderr,"height = %d, width = %d\n", height, width);
