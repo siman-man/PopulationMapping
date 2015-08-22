@@ -258,7 +258,7 @@ class PopulationMapping {
           fque.push(area);
         }
 
-        if(i < divideCount - 4){
+        if(i < divideCount - 1){
           areaList = divideArea2(area);
         }else{
           areaList = divideArea4(area);
@@ -272,15 +272,15 @@ class PopulationMapping {
             if(areaId == areaList.size()-1){
               a.population = area.population - sumPopulation;
             }else{
-              //int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
-              int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
+              int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
+              //int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
               tempPopulation -= population;
               sumPopulation += population;
               a.population = population;
             }
             a.populationRate = a.population / (double)g_totalPopulation;
 
-            if(a.populationRate < g_maxPercentage * 0.002){
+            if(a.populationRate < g_maxPercentage * 0.0018){
               fque.push(a);
             }else if(a.dividedCount <= 5 || a.populationRate < 0.03){
               currentAreaQueue.push(a);
