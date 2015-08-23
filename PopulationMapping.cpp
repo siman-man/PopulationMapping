@@ -117,7 +117,7 @@ typedef struct Area {
   };
 
   bool operator >(const Area &a) const{
-    return s < a.s;
+    return s + landCount < a.s + a.landCount;
   }
 } AREA;
 
@@ -280,8 +280,7 @@ class PopulationMapping {
             }
             a.populationRate = a.population / (double)g_totalPopulation;
 
-            if(a.populationRate < g_maxPercentage * 0.0018){
-              fque.push(a);
+            if(a.populationRate < g_maxPercentage * 0.0018){ fque.push(a);
             }else if(a.dividedCount <= 5 || a.populationRate < 0.03){
               currentAreaQueue.push(a);
             }else{
