@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>assy0000 Rating's Chart</title>
+		<!-- 1. Add these JavaScript inclusions in the head of your page -->
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/highcharts.js"></script>
+		<script type="text/javascript" src="../../js/themes/gray.js"></script>
+		<script type="text/javascript">
+			var chart;
+			$(document).ready(function() {
+				chart = new Highcharts.Chart({
+					chart: {
+						renderTo: 'container',
+						defaultSeriesType: 'spline'
+					},
+					title: {
+						text: 'assy0000 Rating'
+					},
+					subtitle: {
+						text: 
+							'rating : ' + 1509 + ' ' +
+							'volatility : ' + 289 
+					},
+					xAxis: {
+						title: {
+							text: 'Place'
+						},
+						startOnTick : true,
+						endOnTick : true,
+						min : 1,
+						plotLines: [{
+						    value : 40.0,
+						    color : 'rgba(255, 255, 255 , 0.5)',
+						    width : 2,
+						    label : {
+								style : {
+									color : '#FFFFFF' ,
+								},
+								text: 'Current Place (40.0)',
+								rotation : 0
+						    }
+						}],
+					},
+					yAxis: {
+						title: {
+							text: 'New Rating'
+						},
+						minorGridLineWidth: 0, 
+						gridLineWidth: 1,
+						alternateGridColor: null,
+						tickInterval : 100,
+						gridLineColor :  'rgba(155, 155, 155, 0.5)',
+						plotLines: [{
+						    value : 1509,
+						    color : 'rgba(255, 255, 255 , 0.5)',
+						    width : 2,
+						    dashStyle : 'ShortDash',
+						    label : {
+								style : {
+									color : '#FFFFFF' ,
+								},
+								//text: 'Current Rating (1509)',
+								align : 'right',
+								x : -50
+						    }
+						},{
+						    value : 1409,
+						    color : 'rgba(155, 255, 255 , 0.5)',
+						    width : 2,
+						    label : {
+								style : {
+									color : '#FFFFFF' ,
+								},
+								text: 'New Rating (1409)',
+								align : 'right',
+								x : -50
+						    }
+						}],
+						plotBands: [{
+							from: 0,
+							to: 900,
+							color: 'rgba(99, 99, 99, 0.2)',
+						}, {
+							from: 900,
+							to: 1200,
+							color: 'rgba(0, 109, 0, 0.2)',
+						}, {
+							from: 1200,
+							to: 1500,
+							color: 'rgba(66, 66, 255, 0.2)',
+						}, {
+							from: 1500,
+							to: 2200,
+							color: 'rgba(221, 204, 0, 0.2)',
+						}, {
+							from: 2200,
+							to: 4000,
+							color: 'rgba(238, 0, 0, 0.2)',
+						}]
+					},
+					tooltip: {
+						formatter: function() {
+							return 'rank : ' + this.x +'<br/>rating : '+ this.y ;
+						}
+					},
+					plotOptions: {
+						spline: {
+							color : 'rgba(255, 255, 255 , 1)',
+							lineWidth: 2,
+							states: {
+								hover: {
+								}
+							},
+							marker: {
+								enabled: false,
+								states: {
+									hover: {
+										enabled: true,
+										symbol: 'circle',
+										radius: 5,
+										lineWidth: 1
+									}
+								}	
+							},
+							pointInterval: 1,
+							pointStart: 1
+						}
+					},
+					series: [{
+						name: 'New Rating',
+						data: [1853, 1780, 1741, 1714, 1692, 1673, 1657, 1642, 1629, 1617, 1605, 1594, 1584, 1574, 1564, 1555, 1546, 1537, 1529, 1521, 1512, 1504, 1496, 1488, 1481, 1473, 1465, 1457, 1449, 1441, 1433, 1425, 1417, 1409, 1401, 1392, 1384, 1375, 1365, 1356, 1346, 1336, 1325, 1313, 1301, 1287, 1273, 1257, 1238, 1216, 1188, 1150, 1077]
+					}]
+					,
+					navigation: {
+						menuItemStyle: {
+							fontSize: '10px'
+						}
+					}
+				});
+				
+				
+			});
+				
+		</script>
+		
+	</head>
+	<body>
+		
+		<!-- 3. Add the container -->
+		<div id="container" style="width: 100%; height: 400px; margin: 0 auto"></div>
+		
+	</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>mugurelionut Rating's Chart</title>
+		<!-- 1. Add these JavaScript inclusions in the head of your page -->
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/highcharts.js"></script>
+		<script type="text/javascript" src="../../js/themes/gray.js"></script>
+		<script type="text/javascript">
+			var chart;
+			$(document).ready(function() {
+				chart = new Highcharts.Chart({
+					chart: {
+						renderTo: 'container',
+						defaultSeriesType: 'spline'
+					},
+					title: {
+						text: 'mugurelionut Rating'
+					},
+					subtitle: {
+						text: 
+							'rating : ' + 1885 + ' ' +
+							'volatility : ' + 593 
+					},
+					xAxis: {
+						title: {
+							text: 'Place'
+						},
+						startOnTick : true,
+						endOnTick : true,
+						min : 1,
+						plotLines: [{
+						    value : 2.0,
+						    color : 'rgba(255, 255, 255 , 0.5)',
+						    width : 2,
+						    label : {
+								style : {
+									color : '#FFFFFF' ,
+								},
+								text: 'Current Place (2.0)',
+								rotation : 0
+						    }
+						}],
+					},
+					yAxis: {
+						title: {
+							text: 'New Rating'
+						},
+						minorGridLineWidth: 0, 
+						gridLineWidth: 1,
+						alternateGridColor: null,
+						tickInterval : 100,
+						gridLineColor :  'rgba(155, 155, 155, 0.5)',
+						plotLines: [{
+						    value : 1885,
+						    color : 'rgba(255, 255, 255 , 0.5)',
+						    width : 2,
+						    dashStyle : 'ShortDash',
+						    label : {
+								style : {
+									color : '#FFFFFF' ,
+								},
+								//text: 'Current Rating (1885)',
+								align : 'right',
+								x : -50
+						    }
+						},{
+						    value : 2060,
+						    color : 'rgba(155, 255, 255 , 0.5)',
+						    width : 2,
+						    label : {
+								style : {
+									color : '#FFFFFF' ,
+								},
+								text: 'New Rating (2060)',
+								align : 'right',
+								x : -50
+						    }
+						}],
+						plotBands: [{
+							from: 0,
+							to: 900,
+							color: 'rgba(99, 99, 99, 0.2)',
+						}, {
+							from: 900,
+							to: 1200,
+							color: 'rgba(0, 109, 0, 0.2)',
+						}, {
+							from: 1200,
+							to: 1500,
+							color: 'rgba(66, 66, 255, 0.2)',
+						}, {
+							from: 1500,
+							to: 2200,
+							color: 'rgba(221, 204, 0, 0.2)',
+						}, {
+							from: 2200,
+							to: 4000,
+							color: 'rgba(238, 0, 0, 0.2)',
+						}]
+					},
+					tooltip: {
+						formatter: function() {
+							return 'rank : ' + this.x +'<br/>rating : '+ this.y ;
+						}
+					},
+					plotOptions: {
+						spline: {
+							color : 'rgba(255, 255, 255 , 1)',
+							lineWidth: 2,
+							states: {
+								hover: {
+								}
+							},
+							marker: {
+								enabled: false,
+								states: {
+									hover: {
+										enabled: true,
+										symbol: 'circle',
+										radius: 5,
+										lineWidth: 1
+									}
+								}	
+							},
+							pointInterval: 1,
+							pointStart: 1
+						}
+					},
+					series: [{
+						name: 'New Rating',
+						data: [2122, 2060, 2028, 2005, 1986, 1970, 1957, 1944, 1933, 1923, 1913, 1904, 1895, 1887, 1879, 1871, 1864, 1856, 1849, 1842, 1835, 1828, 1822, 1815, 1808, 1802, 1795, 1789, 1782, 1775, 1769, 1762, 1755, 1748, 1741, 1734, 1727, 1719, 1711, 1703, 1695, 1686, 1677, 1667, 1657, 1646, 1633, 1620, 1604, 1586, 1562, 1548, 1548]
+					}]
+					,
+					navigation: {
+						menuItemStyle: {
+							fontSize: '10px'
+						}
+					}
+				});
+				
+				
+			});
+				
+		</script>
+		
+	</head>
+	<body>
+		
+		<!-- 3. Add the container -->
+		<div id="container" style="width: 100%; height: 400px; margin: 0 auto"></div>
+		
+	</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>threepipes_s Rating's Chart</title>
+		<!-- 1. Add these JavaScript inclusions in the head of your page -->
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/highcharts.js"></script>
+		<script type="text/javascript" src="../../js/themes/gray.js"></script>
+		<script type="text/javascript">
+			var chart;
+			$(document).ready(function() {
+				chart = new Highcharts.Chart({
+					chart: {
+						renderTo: 'container',
+						defaultSeriesType: 'spline'
+					},
+					title: {
+						text: 'threepipes_s Rating'
+					},
+					subtitle: {
+						text: 
+							'rating : ' + 1466 + ' ' +
+							'volatility : ' + 365 
+					},
+					xAxis: {
+						title: {
+							text: 'Place'
+						},
+						startOnTick : true,
+						endOnTick : true,
+						min : 1,
+						plotLines: [{
+						    value : 53.0,
+						    color : 'rgba(255, 255, 255 , 0.5)',
+						    width : 2,
+						    label : {
+								style : {
+									color : '#FFFFFF' ,
+								},
+								text: 'Current Place (53.0)',
+								rotation : 0
+						    }
+						}],
+					},
+					yAxis: {
+						title: {
+							text: 'New Rating'
+						},
+						minorGridLineWidth: 0, 
+						gridLineWidth: 1,
+						alternateGridColor: null,
+						tickInterval : 100,
+						gridLineColor :  'rgba(155, 155, 155, 0.5)',
+						plotLines: [{
+						    value : 1466,
+						    color : 'rgba(255, 255, 255 , 0.5)',
+						    width : 2,
+						    dashStyle : 'ShortDash',
+						    label : {
+								style : {
+									color : '#FFFFFF' ,
+								},
+								//text: 'Current Rating (1466)',
+								align : 'right',
+								x : -50
+						    }
+						},{
+						    value : 1286,
+						    color : 'rgba(155, 255, 255 , 0.5)',
+						    width : 2,
+						    label : {
+								style : {
+									color : '#FFFFFF' ,
+								},
+								text: 'New Rating (1286)',
+								align : 'right',
+								x : -50
+						    }
+						}],
+						plotBands: [{
+							from: 0,
+							to: 900,
+							color: 'rgba(99, 99, 99, 0.2)',
+						}, {
+							from: 900,
+							to: 1200,
+							color: 'rgba(0, 109, 0, 0.2)',
+						}, {
+							from: 1200,
+							to: 1500,
+							color: 'rgba(66, 66, 255, 0.2)',
+						}, {
+							from: 1500,
+							to: 2200,
+							color: 'rgba(221, 204, 0, 0.2)',
+						}, {
+							from: 2200,
+							to: 4000,
+							color: 'rgba(238, 0, 0, 0.2)',
+						}]
+					},
+					tooltip: {
+						formatter: function() {
+							return 'rank : ' + this.x +'<br/>rating : '+ this.y ;
+						}
+					},
+					plotOptions: {
+						spline: {
+							color : 'rgba(255, 255, 255 , 1)',
+							lineWidth: 2,
+							states: {
+								hover: {
+								}
+							},
+							marker: {
+								enabled: false,
+								states: {
+									hover: {
+										enabled: true,
+										symbol: 'circle',
+										radius: 5,
+										lineWidth: 1
+									}
+								}	
+							},
+							pointInterval: 1,
+							pointStart: 1
+						}
+					},
+					series: [{
+						name: 'New Rating',
+						data: [1867, 1785, 1742, 1711, 1686, 1665, 1647, 1631, 1616, 1602, 1589, 1577, 1565, 1554, 1543, 1533, 1523, 1513, 1503, 1494, 1485, 1476, 1467, 1458, 1449, 1440, 1431, 1423, 1414, 1405, 1396, 1387, 1378, 1369, 1359, 1350, 1340, 1330, 1320, 1309, 1298, 1286, 1274, 1261, 1247, 1232, 1216, 1198, 1177, 1152, 1121, 1078, 996]
+					}]
+					,
+					navigation: {
+						menuItemStyle: {
+							fontSize: '10px'
+						}
+					}
+				});
+				
+				
+			});
+				
+		</script>
+		
+	</head>
+	<body>
+		
+		<!-- 3. Add the container -->
+		<div id="container" style="width: 100%; height: 400px; margin: 0 auto"></div>
+		
+	</body>
+</html>
