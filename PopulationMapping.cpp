@@ -93,6 +93,8 @@ typedef struct Area {
   int s;
   int population;
   double populationRate;
+  double populationDensity;
+  double landRatio;
 
   Area(int y1 = UNDEFINED, int x1 = UNDEFINED, int y2 = UNDEFINED, int x2 = UNDEFINED){
     this->id = g_areaId;
@@ -108,16 +110,8 @@ typedef struct Area {
     g_areaId += 1;
   }
 
-  double populationDensity(){
-    return population / (double)s;
-  }
-
-  double landRatio(){
-    return landCount / (double)s;
-  };
-
   bool operator >(const Area &a) const{
-    return s < a.s;
+    return s + landCount < a.s + a.landCount;
   }
 } AREA;
 
@@ -272,15 +266,17 @@ class PopulationMapping {
             if(areaId == areaList.size()-1){
               a.population = area.population - sumPopulation;
             }else{
-              int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
-              //int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
+              //int population = queryRegion(a.x1, a.y1, a.x2, a.y2);
+              int population = Population::queryRegion(a.x1, (g_height-1)-a.y1, a.x2, (g_height-1)-a.y2);
               tempPopulation -= population;
               sumPopulation += population;
               a.population = population;
             }
             a.populationRate = a.population / (double)g_totalPopulation;
+            a.populationDensity = a.population / (double)a.s;
+            a.landRatio = a.landCount / (double)a.s;
 
-            if(a.populationRate < g_maxPercentage * 0.0018){
+            if(a.populationRate < g_maxPercentage * 0.0015){ 
               fque.push(a);
             }else if(a.dividedCount <= 5 || a.populationRate < 0.03){
               currentAreaQueue.push(a);
